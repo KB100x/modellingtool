@@ -1,0 +1,290 @@
+Thanks for creating this output. There are some changes and implementations I would like to add to the app.   Here they’re:
+
+1) The dashboard view should be able to show in a card format the “blended” metrics [blended means, the final output of the model], these are the metrics you should reflect in the dashboard page as a card format:
+
+Valuation
+* DCF Equity Value: $1,653,358,129.81
+* Share Price: $1,653.36
+
+Profitability
+* Profit Per Customer Per Month: $3,178.47
+* Renewal Profit Per Customer Per Month: $35,631.90
+* Renewal Profit Per Customer Per Day: $1,171.72
+* Contribution After Marketing: $33,551.12
+* Contribution Margin Before Marketing: 90.0%
+* Contribution Margin After Marketing: 74.31%
+* Profit Per Customer Per Day: $104.52
+
+Financial Metrics
+* Cash Below Operating Day: Day 1
+* Cash in Bank: $0.00
+* Assets: $0.00
+* Liabilities: $0.00
+* Debt: $0.00
+* Debt Interest Rate: 6.0%
+* Cost of Debt (Daily): $0.00
+* Cost of Debt (Monthly): $0.00
+
+Customer Metrics
+* Customer Count: 0 Customers
+* Total Addressable Market: Not specified
+* Lifetime Value (LTV): $93,000.00
+* Customer Acquisition Cost (CAC): $7,085.23
+* LTV/CAC Ratio: 13.13
+* Customer Acquisition Rate (Daily): 5.26 Customers
+* Customer Acquisition Rate (Monthly): 160.0 Customers
+* Consumption Per Customer: $8,193.09
+
+Product & Acquisition Costs
+Initial Offer
+* Expected Value of Offer Price: $45,151.50
+* Cost to Fulfill: $4,515.15
+* Cost to Market: $312.50
+* Cost to Sell: $6,772.73
+Renewals
+* Expected Value of Renewal Price: $45,151.50
+* Cost to Fulfill Renewal: $5,000.00
+* Cost to Sell Renewal: $5,000.00
+
+Business Modelling (Granular - Inbound)
+* Media Spend Per Day: $1,644.20
+* Leads Per Day (Inbound): 65.77
+* Leads Per Month (Inbound): 2000.0
+* Cost Per Lead (Inbound): $25.00
+* Customers Per Day (Inbound): 5.26
+* Customers Per Month (Inbound): 160.0
+* Cost Per Click: $0.50
+* Inbound Cost Per Customer: $7,085.23
+
+Business Modelling (Blended)
+* Blended Leads Per Day: 65.77
+* Blended Leads Per Month: 2000.0
+* Outbound Lead Ratio: 0.0%
+* Inbound Lead Ratio: 100.0%
+* Organic Lead Ratio: 0.0%
+* Blended Cost Per Lead: $25.00
+* Blended Lead Conversion Rate: 8.0%
+* Blended Customers Per Day: 5.26
+* Blended Customers Per Month: 160.0
+* Time to Market (Blended): 1.0 Days
+* Cost to Market (Blended): $312.50
+
+Administration & Fixed Costs
+* Fixed Costs Per Day: $3,288.39
+* Fixed Costs Per Month: $100,000.00
+* Fixed Cost Increase Per 100 Customers: $0.00
+
+Sales & Workforce
+* Sales Reps Needed: 160
+
+Additionally for the dashboard overview page should have these different dashboard in addition to the current ones:
+
+* Monthly Free Cash Flow vs. Time (with the ability to view by days too, when hovering)
+* New Renewal Customers vs. Time (with the ability to view by days too, when hovering)
+* Customers vs. Time (Total amount of customers through time.) (with the ability to view by days too, when hovering)
+
+The Lead Sources section, the margins are not right, the sources are too close to the bar grophic, bring more margin between the bar and the sources, and also extend the lenght of the bar with the same margin used before between the sources and the bar graph, with the numeric output thts on the right.
+
+
+Top Performers
+
+Instead of top performers as people, just change it to the most efficient models or with high revenue with efficient and healthy metrics.
+
+
+2) For the AI Modeling section. Add the all the inputs necessary to create the model, here they’re the inputs:  1. Product Section
+Variables representing the core offering (n = total customer count):
+Key Parameters:
+* Price of Offer (P):
+    * Average contract value during initial term (excluding renewals)
+    * Calculation: revenue/total_customers
+    * Examples:
+        * 100/monthfor12months→P=
+        * 100/monthfor12months→P=1200
+        * 400/monthfor3months→P=
+        * 400/monthfor3months→P=1200
+        * No fixed contract → P equals single payment amount
+* Realization Rate (RR):
+    * Collected cash ÷ Requested cash
+    * Typical values:
+        * Full payment: 100%
+        * 12-month plans: 90-95%
+        * Shorter terms: Slightly higher than 12-month rates
+* Cost to Fulfill (c_f):
+    * Delivery cost as % of P
+    * Industry benchmarks:
+        * Service businesses: ~30%
+        * SaaS businesses: ~5%
+* Time Parameters:
+    * t_s (Time to sell): Lead to purchase (20-30 days typical)
+    * t_m (Time to market): First impression to lead
+    * t_c (Time to collect): Purchase to full payment
+        * Examples:
+            * Annual plan: 365 days
+            * Quarterly plan: 90 days
+            * Full payment: 1 day
+* Refund Metrics:
+    * refund_period: Processing time (0-60 days)
+    * refund_rate: Percentage refunded (recommended <5%)
+* Churn Rate:
+    * Non-renewing customers (0-100%)
+    * Constraint: refund_rate + churn_rate ≤ 100%
+2. Renewals Subsection
+Parameters:
+* p_renewal: Renewal offer price (calculated like P)
+* t_renew: Renewal period duration
+    * Annual: 365 days
+    * Monthly: 30 days
+    * One-time: 0 days
+* Cost Structure:
+    * c_s_renewals: Sales commission (% of p_renewal)
+    * c_f_renewal: Fulfillment cost (% of p_renewal)
+        * Default: equals c_f
+* Time to collect renewal (t_c_renewal): Renewal to full payment
+* renewal_rate_renewals: Subsequent renewal probability
+3. Sales & Marketing Section
+Default View:
+* c_m: Lead generation cost (% of P)
+* c_s: Sales conversion cost (% of P)
+    * Example: 15% commission + 3% manager = 18%
+Granular View (selectable options):
+Outbound Prospecting:
+* outbound_salary: SDR compensation (
+* 2000−
+* 2000−3000 typical)
+* number_of_contacts_per_month: Outreach volume (~2000 contacts)
+* number_of_sdrs: Team size
+* outbound_contact_to_lead_conversion_rate: Contact→Lead (typically ~1%)
+* time_to_market_outbound: First contact to lead (15-20 days)
+* lead_to_customer_conversion_rate_outbound: Lead→Customer (example: 8%)
+Inbound Marketing:
+* media_spend: Monthly advertising budget
+* CPM: Cost per 1000 impressions
+* CTR: Click-through rate (2-4% = good)
+* funnel_conversion_rate: Click→Lead
+* time_to_market_inbound: Impression to lead (~1 day)
+* lead_to_customer_conversion_rate_inbound: Lead→Customer rate
+4. Starting State
+* cash_0: Initial capital (t=0)
+* c_0: Baseline customer count
+5. Viral Component
+(Optional section - disabled by default)
+Parameters:
+* Invites: Referrals per customer
+* viral_conversion_rate: Invite acceptance rate
+* viral_time: Conversion timeframe
+* viral_start: Activation day
+* c_s_viral: Sales cost (% of P)
+* c_m_viral: Marketing cost (% of P)
+6. Administration
+Financial Parameters:
+* TF: Payment processing fee (2.9% typical)
+* FC: Monthly fixed costs
+* fixed_cost_increase_per_hundred_customers: Scalable overhead
+    * Example: 
+    * 9000developerper300customers=
+    * 9000developerper300customers=3000/100
+Capital Structure:
+* upfront_costs: Initial investment
+* debt: Total liabilities
+* r_debt: Annual interest rate
+* fcf_left_in_company: Retained cash flow (0-100%)
+7. Valuation Section
+Common Parameters:
+* r_tax: Local tax rate
+* inflation_rate: (~2%)
+* max_time_period: Simulation duration (days)
+* shares: Outstanding shares
+Valuation Methods:
+DCF:
+* projection_period_dcf: Forecast horizon (typically 1825 days)
+* r_discount: Investor hurdle rate
+* r_perpetual_growth: Long-term growth (1-5%)
+EBITDA Multiple:
+* EBITDA multiple: Industry-specific (SaaS:14, Consulting:8)
+* projection_period_ebitda: Minimum 365 days
+P/E Ratio:
+* pe_multiple: Comparable to public companies
+* projection_period_pe: Minimum 365 days
+Revenue Multiple:
+* ev_revenue_multiple: Industry benchmark
+* projection_period_ev_revenue: Minimum 365 days
+
+
+And here the same inputs but with more context within each one of them:  		Product section  Note that when there are calculations including n, it represents the whole set of customers acquired by your company until this point in time. 
+* 		● Price of offer (P): Average price of the offer sold to the customers during contract period (term length), excluding renewals. You will most likely just be starting with 1 offer, so that will be the value used here. It is irrelevant if it’s paid in full, or if payments are paid monthly a certain number of months, until paid in full.  ○ For example: If the customer buys a $1200 offer, pays $100 per month for a 12 month contract, P is $1200. If the customer pays $400 per month for a 3 month contract, the P is also $1200. If the customer buys a $600 offer, and pays $300 first and second month, P is $600. If the customer pays $100 per month with no set payment contract, P is $100, regardless how many months he decides to renew and pay $100 again. 
+○ This can be calculated as revenue/total_customers.
+* 		●  Realization rate (RR): The ratio of cash collected over cash requested (revenue sold) during the contract length. If customers must pay in full, this is 100%. If customers pay over 12 months, this is usually around 90-95%. For payment options that are shorter than 12 months, the Realization rate is usually slightly higher than for 12 months option. 
+* 		●  Cost to fulfill (c_f): The cost to deliver on the transformation or fulfil the promise required in order to collect the money, P. This is expressed as a % of Price of offer. Can be (1-marginal gross contribution). If you are working on a service business, the c_f ~ 30%, where 30% of the revenue from P is used to deliver the promise. In a SaaS business, the c_f ~ 5%. At scale, SaaS businesses are more efficient than service businesses. 
+* 		●  Time to sell (t_s): The time in days between the lead creation event and the first purchase event. Also referred to as the sales cycle event. It is usually around 20 to 30 days. 
+* 		●  Time to market (t_m): The time in days between the first impression on a cold prospect (e.g. seeing an ad, or seeing email sent to him) and the lead event (prospect completes quiz, or indicates they have need/authority/resources, or disco event). 
+* 		●  Time to collect (t_c): The time in days between the first purchase event and the event where the prospect settles the bill for that purchase. For example: The t_c for a 1 year payment plan will be 365 days, and the t_c for a 3 month payment plan paid each month is 90 days. For paid in full, t_c is 1 day. 
+* 		●  Refund period (refund_period): The time in days it takes for someone to ask and receive a refund if they ask one. If there are no refunds, this is 0. If you are providing a yearly offer, the refund period will usually be around 45 to 60 days. 
+* 		●  Refund rate (refund_rate): The percentage of customers who are refunded. This indicates how good your product is. This should not be higher than 5%. 
+* 		●  Churn rate (churn_rate): The percentage of customers who choose not to renew within t_renew (renewal period). If no customers renew after the renewal period, churn rate is 100%. If all customers renew after the renewal period, churn rate is 0%. Note that the sum of churn rate and refund rate must be equal or lower than 100%. 
+Renewals:
+* 		●  Price of renewal (p_renewal): Average total Price of Renewal offer. Calculated  with the same principle as Price of offer. 
+* 		●  Time to renew (t_renew): Also called the renewal period. The time interval between the first purchase event and the expected renewal event. If you have a one-off purchase, this value will be zero. For yearly offers, time to renew is 365 days, and for monthly 30 days. 
+* 		●  Cost to sell renewal (c_s_renewals): The cost required to renew a customer. If it is automatically done, it is 0. If sales people are also selling the renewal offer, then it's their commission (expressed as percentage of price of renewal, usually 15%). 
+* 		●  Cost to fulfill renewal (c_f_renewal): The cost to deliver on the transformation or fulfil the promise required in order to collect the money, in this case p_renewal. This value will usually be between 0 and c_f (note that p_renew might be lower than P, and if dollar values of c_f and c_f_renewal are the same, that will result in c_f_renewal being higher percentage). If there is no difference between offer fulfillment (with regards to percentage of price), c_f_renewal will be equal c_f (this can be used as default). 
+* 		●  Time to collect renewal (t_c_renewal): Time in days between t_renew and time when whole p_renewal is collected. 
+* 		●  Renewal rate of renewals (renewal_rate_renewals): The rate at which customers who already renewed at least once, renew again (after another renewal period).  Sales and Marketing section  Default view  The Sales and Marketing section can be used with or without granular approach. By default, you won’t have Granular selected, and inputs that are used are c_m and c_s. 
+● Cost to market (c_m): The cost required to generate a lead, expressed as a % of P, where a lead is defined as someone who has submitted a questionnaire or who has indicated the need, the authority to buy, and the resources to take action. You can determine this number as percentage of Revenue that is spent on marketing,
+or calculate it granulary (this is done internally in the granular section, below is explanation how it is derived).
+● Cost to sell (c_s): The cost required to turn a lead into a closed account, expressed as a % of P. This can be calculated as the total commission paid for a sale (excluding commission paid for generating a lead, which is c_m).
+Granular view
+* 		○  For example: if the sales commission is 15% and the sales manager gets 3%, c_s = 18%. 
+* 		○  You can also derive this by looking at total commissions divided by revenue. 
+Once you select the Granular field, you will have the option to select Outbound and Inbound fields. Granular field functions as a drop-down, so you can choose in depth inputs for different marketing strategies. You can select Outbound, Inbound, or both (note that you have to deselect these fields, if you want to switch back to use c_m, and c_s).
+Outbound:
+This subsection simulates outbound prospecting done by SDRs. Most of the numbers used in Outbound can be derived from Outbound Prospecting tracking sheet:
+* 		●  Outbound salary (outbound_salary): Average salary for an SDR. If it is fixed, then it's just that $ value. If it is a commission, it is an average $ value of commission paid out. This should include all bonuses. Outbound Salary is usually around $2000 to $3000. If you are doing outbound prospecting yourself, then you will set the salary to $0. 
+* 		●  Number of contacts per month (number_of_contacts_per_month): Average number of contacts (emails, LinkedIn messages, cold calls...) per SDR, on a monthly level. Usually around 2000 emails. 
+○ If you have SDRs already doing outbound prospecting, this is the average number of total outreaches done by individual SDR.
+* 		●  Number of SDRs (number_of_sdrs): Amount of SDRs you currently have prospecting for you. 
+* 		●  Outbound contact to lead conversion rate (outbound_contact_to_lead_conversion_rate): Ratio of contacts that become leads. If you have 1000 contacts that result in 10 leads, your rate is 1%. 
+○ If you have SDRs already doing outbound prospecting, this is the average percentage of Demos Booked/Contact.
+* 		●  Time to market outbound (time_to_market_outbound): The time in days between the first impression on a cold prospect (first contact) and the lead event (disco call). This is usually 15-20 days on average. It can be derived from values in the CRM. 
+* 		●  Lead to customer conversion rate outbound (lead_to_customer_conversion_rate_outbound): Ratio of leads that become customers. If you have 100 leads that result in 8 customers, your rate is 8%.  Inbound:  This subsection simulates inbound activity, usually media buying.  Example metrics from Facebook ads-manager: 
+* 		●  Media spend (media_spend): Amount of money you spend on a monthly basis for media buying. This includes all platforms (Facebook, Linkedin, Youtube...). In this example it is $10,001.41. 
+* 		●  Cost per thousand impressions (CPM): How much it costs you to show your ad 1000 times (can be shown multiple times to same people). This number can be found in analytics on the platform you are using for advertising. In this example it is $23.08. CPM will depend on which market you are showing your ads to. 
+* 		●  Click Through Rate (CTR): Ratio of clicks your ad receives and impressions. This number can be found in analytics on the platform you are using for advertising. In this example it is 1.69%. Good CTR is anywhere between 2% and 4%.  Example metrics from Facebook analytics: 
+● Funnel conversion rate (funnel_conversion_rate): Ratio of clicks that turn into a lead. Percentage of people who click on your ad (visit the website), that end up completing a quiz. In this example it is 3.20%.
+○ This can be calculated as completed_quizzes/clicks.
+● Time to market inbound (time_to_market_inbound): The time in days between the first impression on a cold prospect (seeing an ad) and the lead event (prospect completes quiz). For online advertising time to market is median completion time from first land to lead event as measured by Facebook Analytics (or any other
+analytics tool that measures this data). If it is between two days, round up to higher value. In this example it is 12.8 minutes, round it up to 1 day. If it is 1 day and 3 hours, round it up to 2 days. For online advertising, it will usually be 1 day.
+● Lead to customer conversion rate inbound (lead_to_customer_conversion_rate_inbound): Ratio of leads that become customers. Can also be viewed as a ratio of prospects that became a customer after completing a quiz and total number of quizzes completed.
+Starting State section
+* 		●  Cash in bank (cash_0): Cash in the bank at time, t=0. Use t=0 as the beginning of the forecasting period. 
+* 		●  Initial customer count (c_0): The customer count at time t=0, or the initial customer count.  Viral Component section  By default the Viral Component section looks like this. When not selecting anything, you are observing the model as if viral effect does not exist. You can select the viral_component field, and it will open the viral component section. Viral component section simulates viral marketing effects. Usually refers to referrals, or invites from existing customers to new ones. Can be both organic and paid. 
+* 		●  Invites per customer (Invites): The average number of referral requests or invites a customer sends to non-customers during active time. This can be both formal, and word of mouth invite. 
+* 		●  Conversion rate per invite (viral_conversion_rate): The rate at which referral requests or invites convert to paying customers. 
+* 		●  Viral time (viral_time): The average time it takes for a referral or invite to convert to a paying customer. 
+* 		●  Viral start (viral_start): The day at which the viral effect starts. This can be the day at which a referral mechanism will be introduced. 
+* 		●  Cost to sell viral (c_s_viral): The cost required to turn a referral or an invite into a closed account, expressed as a % of P. 
+● Cost to market viral (c_m_viral): The cost required to generate a referral or an invite that turns into a customer, expressed as a % of P.
+○ If you are paying $1000 for a successful referral, and P is $10000, then it's 10%. If the referrals or invites are organic, then it is 0%.
+Administration section
+* 		●  Transaction fee (TF): The fee paid to the payment processors, typically 2.9%. 
+* 		●  Fixed cost per month (FC): The average monthly fixed costs for the business. This includes rent, computers, founder salaries, engineer salaries, etc. These are all the costs that are necessary, and that do not depend on the amount of the customers. 
+* 		●  Fixed cost increase per hundred customers (fixed_cost_increase_per_hundred_customers): The variable part of fixed cost. It is an additional amount that is added to monthly fixed costs, for every 100 customers you have.  ○ E.g. if for every 300 customers you need to hire an extra developer, whose salary is $9000 per month, then fixed_cost_increase_per_hundred_customers=$9000/(300/100)=$3000. 
+* 		●  Upfront investment costs (upfront_costs): The amount of up-front capital needed to start where c_0 > 0. Includes the cost of building the mechanism and sales funnel. 
+* 		●  Debt (debt): In some cases, the business will have debt. This value represents the sum of liabilities on the balance sheet. 
+* 		●  Debt interest rate (r_debt): The annual interest rate on the debt, if there is debt. 
+* 		●  FCF left in company (fcf_left_in_company): Percentage of Free Cash Flow, that is not being taken out of the company. If you are taking all the money (after tax and all expenses) out of the company, this is 0%. If you are not taking any money, this is 100%.  Valuations section 
+By default all Valuation methods will be shown in this section. You can uncheck the box next to a certain Valuation method if you do not want to use that specific method.
+* 		●  Tax rate (r_tax): The tax rate applicable to the business in its country of registration. This is used to calculate the free cash flow of the business, and therefore used in the DCF valuation method. 
+* 		●  Inflation rate (inflation_rate): Rate at which prices for goods and services is rising compared to the currency you are operating in. Current inflation rate is approximately 2%. 
+* 		●  Time max (max_time_period): Time period in days you want to simulate the outputs. 
+* 		●  Number of share (shares): The number of shares of the business issued as defined in the shareholder agreement.  DCF Method:  Discounted cash flow valuation method, used to determine value of investment based on simulation of the future free cash flow. 
+* 		●  Projection period DCF (projection_period_dcf): The time period in days before which the present value of future free cash flows is summed, and after which the next future yearly free cash flow is used to determine the terminal value. The period usually used is 5 years (1825 days). 
+* 		●  Discount rate (r_discount): The discount rate is used by investors to value their opportunities relative to each other and is unique to each investor. Often, the risk-free rate (usually the average yearly return of the S&P 500) is used here. The risk free rate can be calculated by subtracting the current inflation rate from the yield of a treasury bond matching the investment duration. 
+* 		●  Growth rate (r_perpetual_growth): The expected long-term steady-state growth rate of the business. This value is typically between the historical inflation rate of 1-3% and the historical GDP growth rate of 4-5%. It is used in the DCF method to calculate the terminal value, which in turn is used to calculate the enterprise value. The Terminal value is the present value of all future cash flows, calculated at a point in the future where there is steady, long-term growth. Growth rate must be lower than the discount rate.  EBITDA Multiple Method: 
+This method uses EBITDA multiple value, and companies EBITDA, to determine the Enterprise Value of the company.
+* 		●  Enterprise multiple EBITDA (EBITDA multiple): The enterprise value is the total market value of a business including debts and liabilities. One way to determine the enterprise value of a business is to use the ebitda multiple, which varies by industry and can be found in different academic publications, notably from New York University. The enterprise value can then be calculated using EV = EBITDA*enterprise_multiple_ebitda. We calculate this EV to determine the difference between the EBITDA multiple method and the DCF method. For SaaS companies, this value is 14 on average, while for the consulting companies it is 8. 
+* 		●  Projection period EBITDA (projection_period_ebitda): Projection period in days that is used for determining Valuation using EBITDA multiple method. It represents the number of days after which you are valuing your company using this method. Projection period should be at least 365 days, given that before that a full year does not exist in the simulation.  P/E Method:  This method uses P/E multiple value, and companies Earnings, to determine the Enterprise Value of the company. 
+* 		●  PE multiple (pe_multiple): Price to Earning ratio used to determine market cap of the company. The market cap of the company can be calculated as Earnings*P/E_multiple. P/E multiple can be derived from similar publicly traded companies. 
+* 		●  Projection period PE (projection_period_pe): Projection period in days that is used for Valuation using the P/E multiple method. It represents the number of days after which you are valuing your company using this method. Projection period should be at least 365 days, given that before that a full year does not exist in the simulation.  Revenue Multiple Method:  This method uses Enterprise/Revenue multiple value, and companies Revenue, to determine the Enterprise Value of the company. 
+● EV revenue multiple (ev_revenue_multiple): The enterprise value to revenue multiple is a measure of the value of a stock that compares a company's enterprise value to its revenue. The enterprise value of the company can be calculated as Revenue*ev_revenue_multiple. EV revenue multiple can be derived from similar publicly traded companies.
+● Projection period EV revenue (projection_period_ev_revenue): Projection period in days that is used for Valuation using EV revenue multiple method. It represents the number of days after which you are valuing your company using this method. Projection period should be at least 365 days, given that before that a full year does not exist in the simulation.
+
+3) Enhance more the design of the tool, make it more modern, use dark green colors. 

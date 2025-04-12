@@ -1,0 +1,334 @@
+# App Blueprint: "ForecastIQ" - Business Economics Forecasting Tool  
+
+## 1. Project Breakdown  
+
+**App Name:** ForecastIQ  
+**Platform:** Web  
+**Summary:** ForecastIQ is an internal forecasting engine designed for growth consultancies and corporate advisory firms. It enables users to simulate and visualize a client's economic future by analyzing sales, marketing, and operational inputs. The tool generates dynamic projections (revenue, profitability, customer growth, unit economics) and supports scenario modeling for strategic decision-making. Its goal is to bridge financial forecasting with go-to-market strategy through intuitive data visualization and interactive modeling.  
+
+**Primary Use Case:**  
+- Advisors input client data (pricing, CAC, churn, virality) to generate real-time forecasts  
+- Teams compare scenarios (e.g., "What if we reduce churn by 10%?") for board presentations or investor prep  
+
+**Authentication:**  
+- Role-based access via Supabase Auth (email/password + SSO for enterprise clients)  
+- Three tiers: Analyst (read-only), Advisor (edit/create forecasts), Admin (manage templates/benchmarks)  
+
+---  
+
+## 2. Tech Stack Overview  
+- **Frontend Framework:** React + Next.js (App Router for dynamic routes, Server Components for data fetching)  
+- **UI Library:** Tailwind CSS + ShadCN (pre-built accessible components like sliders, data tables)  
+- **Backend (BaaS):** Supabase (PostgreSQL for relational data, real-time subscriptions for collaborative editing)  
+- **Deployment:** Vercel (serverless functions for API routes, edge caching for global performance)  
+
+---  
+
+## 3. Core Features  
+
+### 1. Dynamic Input Forms  
+- Multi-step forms with conditional fields (e.g., show "virality coefficient" only if "organic growth" is toggled)  
+- Input validation using Zod (e.g., CAC must be ≤ LTV)  
+
+### 2. Scenario Modeling  
+- Save/compare forecast variants (e.g., "Optimistic" vs. "Conservative" pricing)  
+- Toggle assumptions (e.g., "Apply 15% inflation adjustment") with undo/redo  
+
+### 3. Visualization Dashboard  
+- Interactive D3.js charts (time-series revenue, waterfall margins)  
+- Exportable PDFs with branded templates (Next.js + Puppeteer)  
+
+### 4. Benchmark Library  
+- Pre-loaded industry unit economics (Supabase tables with CRUD interfaces)  
+
+### 5. Collaboration Tools  
+- Real-time comments on forecasts (Supabase Realtime)  
+- Version history (Supabase Row Level Security for audit trails)  
+
+---  
+
+## 4. Model Structure  
+
+The model is organized into six main sections:  
+1. Product  
+2. Sales and Marketing  
+3. Customer Growth  
+4. Viral Component  
+5. Administration  
+6. Valuation  
+
+**Interface Features:**  
+- Collapsible Sections: Each section can be minimized using the arrow icon next to its name  
+- Persistent Calculations: Minimized sections continue to contribute to calculations  
+- Input Field Details: All fields include:  
+  - Clear labels (e.g., "P" for "Price of Offer")  
+  - Explanatory tooltips accessible via dropdown arrows  
+
+**Input Requirements:**  
+- **Model Information:**  
+  - Name: Identify your model  
+  - Description: Record input notes and observational insights  
+  - Visibility: Option to make the model public  
+
+---  
+
+## 5. Section Details  
+
+### 1. Product Section  
+Variables representing the core offering (n = total customer count):  
+
+**Key Parameters:**  
+- **Price of Offer (P):**  
+  - Average contract value during initial term (excluding renewals)  
+  - Calculation: revenue/total_customers  
+  - Examples:  
+    - $100/month for 12 months → P = $1200  
+    - $400/month for 3 months → P = $1200  
+    - No fixed contract → P equals single payment amount  
+- **Realization Rate (RR):**  
+  - Collected cash ÷ Requested cash  
+  - Typical values:  
+    - Full payment: 100%  
+    - 12-month plans: 90-95%  
+    - Shorter terms: Slightly higher than 12-month rates  
+- **Cost to Fulfill (c_f):**  
+  - Delivery cost as % of P  
+  - Industry benchmarks:  
+    - Service businesses: ~30%  
+    - SaaS businesses: ~5%  
+
+**Time Parameters:**  
+- t_s (Time to sell): Lead to purchase (20-30 days typical)  
+- t_m (Time to market): First impression to lead  
+- t_c (Time to collect): Purchase to full payment  
+  - Examples:  
+    - Annual plan: 365 days  
+    - Quarterly plan: 90 days  
+    - Full payment: 1 day  
+
+**Refund Metrics:**  
+- refund_period: Processing time (0-60 days)  
+- refund_rate: Percentage refunded (recommended <5%)  
+
+**Churn Rate:**  
+- Non-renewing customers (0-100%)  
+- Constraint: refund_rate + churn_rate ≤ 100%  
+
+### 2. Renewals Subsection  
+**Parameters:**  
+- p_renewal: Renewal offer price (calculated like P)  
+- t_renew: Renewal period duration  
+  - Annual: 365 days  
+  - Monthly: 30 days  
+  - One-time: 0 days  
+- Cost Structure:  
+  - c_s_renewals: Sales commission (% of p_renewal)  
+  - c_f_renewal: Fulfillment cost (% of p_renewal)  
+    - Default: equals c_f  
+- Time to collect renewal (t_c_renewal): Renewal to full payment  
+- renewal_rate_renewals: Subsequent renewal probability  
+
+### 3. Sales & Marketing Section  
+**Default View:**  
+- c_m: Lead generation cost (% of P)  
+- c_s: Sales conversion cost (% of P)  
+  - Example: 15% commission + 3% manager = 18%  
+
+**Granular View (selectable options):**  
+- **Outbound Prospecting:**  
+  - outbound_salary: SDR compensation ($2000-$3000 typical)  
+  - number_of_contacts_per_month: Outreach volume (~2000 contacts)  
+  - number_of_sdrs: Team size  
+  - outbound_contact_to_lead_conversion_rate: Contact→Lead (typically ~1%)  
+  - time_to_market_outbound: First contact to lead (15-20 days)  
+  - lead_to_customer_conversion_rate_outbound: Lead→Customer (example: 8%)  
+- **Inbound Marketing:**  
+  - media_spend: Monthly advertising budget  
+  - CPM: Cost per 1000 impressions  
+  - CTR: Click-through rate (2-4% = good)  
+  - funnel_conversion_rate: Click→Lead  
+  - time_to_market_inbound: Impression to lead (~1 day)  
+  - lead_to_customer_conversion_rate_inbound: Lead→Customer rate  
+
+### 4. Starting State  
+- cash_0: Initial capital (t=0)  
+- c_0: Baseline customer count  
+
+### 5. Viral Component  
+*(Optional section - disabled by default)*  
+**Parameters:**  
+- Invites: Referrals per customer  
+- viral_conversion_rate: Invite acceptance rate  
+- viral_time: Conversion timeframe  
+- viral_start: Activation day  
+- c_s_viral: Sales cost (% of P)  
+- c_m_viral: Marketing cost (% of P)  
+
+### 6. Administration  
+**Financial Parameters:**  
+- TF: Payment processing fee (2.9% typical)  
+- FC: Monthly fixed costs  
+- fixed_cost_increase_per_hundred_customers: Scalable overhead  
+  - Example: $9000 developer per 300 customers = $3000/100  
+- **Capital Structure:**  
+  - upfront_costs: Initial investment  
+  - debt: Total liabilities  
+  - r_debt: Annual interest rate  
+  - fcf_left_in_company: Retained cash flow (0-100%)  
+
+### 7. Valuation Section  
+**Common Parameters:**  
+- r_tax: Local tax rate  
+- inflation_rate: (~2%)  
+- max_time_period: Simulation duration (days)  
+- shares: Outstanding shares  
+
+**Valuation Methods:**  
+- **DCF:**  
+  - projection_period_dcf: Forecast horizon (typically 1825 days)  
+  - r_discount: Investor hurdle rate  
+  - r_perpetual_growth: Long-term growth (1-5%)  
+- **EBITDA Multiple:**  
+  - EBITDA multiple: Industry-specific (SaaS:14, Consulting:8)  
+  - projection_period_ebitda: Minimum 365 days  
+- **P/E Ratio:**  
+  - pe_multiple: Comparable to public companies  
+  - projection_period_pe: Minimum 365 days  
+- **Revenue Multiple:**  
+  - ev_revenue_multiple: Industry benchmark  
+  - projection_period_ev_revenue: Minimum 365 days  
+
+---  
+
+## 6. Output Metrics  
+
+### Valuation  
+- **T Profitability Month:** [Calculated value]  
+- **DCF Equity Value:** [Calculated value]  
+- **Share Price:** [Calculated value]  
+- **C Consumption:** [Calculated value]  
+- **Profit Per Customer Per Month:** [Calculated value]  
+- **Cash Below SO Day:** [Calculated value]  
+
+### Starting State  
+- **Cash In Bank:** [Calculated value]  
+- **Assets:** [Calculated value]  
+- **Liabilities:** [Calculated value]  
+- **Customer Count:** [Calculated value]  
+
+### Total Addressable Market  
+- **Upfront Investment Costs:** [Calculated value]  
+- **Debt:** [Calculated value]  
+- **Debt Interest Rate:** [Calculated value]  
+
+### Product and Acquisition  
+- **Expected Value Of Offer Price:** [Calculated value]  
+- **Cost To Fulfill Dollars:** [Calculated value]  
+- **Cost To Market Dollars:** [Calculated value]  
+- **Cost To Sell Dollars:** [Calculated value]  
+- **Customer Acquisition Cost:** [Calculated value]  
+- **Expected Value Of Renewal Price:** [Calculated value]  
+- **Cost To Fulfill Renewal Dollars:** [Calculated value]  
+- **Lifetime Value:** [Calculated value]  
+
+### Renewals  
+- **Cost To Sell Renewal Dollars:** [Calculated value]  
+- **Renewal Profit Per Customer Per Day:** [Calculated value]  
+- **Renewal Profit Per Customer Per Month:** [Calculated value]  
+
+### Business Modelling  
+- **Media Spend Per Day:** [Calculated value]  
+- **Lead Dot Inbound Per Day:** [Calculated value]  
+- **Lead Dot Inbound Per Month:** [Calculated value]  
+- **Cost Per Lead Inbound:** [Calculated value]  
+- **C Dot Inbound Per Day Rounded:** [Calculated value]  
+- **C Dot Inbound Per Month Rounded:** [Calculated value]  
+- **Cost Per Click:** [Calculated value]  
+- **Inbound Cost Per Customer:** [Calculated value]  
+
+### Blended Metrics  
+- **Blended Lead Dot Per Day:** [Calculated value]  
+- **Blended Lead Dot Per Month:** [Calculated value]  
+- **Outbound Lead Ratio:** [Calculated value]  
+- **Inbound Lead Ratio:** [Calculated value]  
+- **Organic Lead Ratio:** [Calculated value]  
+- **Blended Cost Per Lead:** [Calculated value]  
+- **Blended Lead Conversion Rate:** [Calculated value]  
+- **C Dot Blended Per Day Rounded:** [Calculated value]  
+- **C Dot Blended Per Month Rounded:** [Calculated value]  
+- **Time To Market Blended:** [Calculated value]  
+- **Cost To Market Blended:** [Calculated value]  
+- **Lifetime Value / Cost To Acquire Customer:** [Calculated value]  
+- **Contribution After Marketing:** [Calculated value]  
+- **Contribution Margin Before Marketing:** [Calculated value]  
+- **Contribution Margin After Marketing:** [Calculated value]  
+- **Profit Per Customer Per Day:** [Calculated value]  
+- **Customer Acquisition Rate Per Day Rounded:** [Calculated value]  
+- **Customer Acquisition Rate Per Month Rounded:** [Calculated value]  
+- **Sales Reps Needed:** [Calculated value]  
+
+### Administration  
+- **Fixed Costs Per Day:** [Calculated value]  
+- **Fixed Costs Per Month:** [Calculated value]  
+- **Fixed Cost Increase Per Hundred Customers Per Day:** [Calculated value]  
+- **Cost Of Debt Daily:** [Calculated value]  
+- **Cost Of Debt Monthly:** [Calculated value]  
+
+---  
+
+## 7. User Flow  
+
+1. **Authentication:** User logs in via Supabase Auth (SSO optional)  
+2. **Create Forecast:**  
+   - Select template (e.g., "SaaS Startup") or start blank  
+   - Fill input form (progressively disclosed fields based on prior answers)  
+3. **Model Scenarios:**  
+   - Duplicate forecast, adjust sliders (e.g., "Increase conversion rate by 5%")  
+   - Compare side-by-side in dashboard view  
+4. **Share Results:**  
+   - Generate shareable link (protected by RLS) or export PDF  
+   - Tag team members for feedback (real-time mentions via Supabase)  
+
+---  
+
+## 8. Design & UI/UX Guidelines  
+
+- **Data Density:** Prioritize "at-a-glance" insights. Use:  
+  - Tailwind's grid system for responsive card layouts  
+  - ShadCN's `<HoverCard>` for contextual help (e.g., hover "CAC" to see definition)  
+- **Interactivity:**  
+  - Debounced sliders (live preview without recalculating on every tick)  
+  - Keyboard shortcuts (e.g., `Cmd+S` to save scenario)  
+- **Theming:**  
+  - Dark/light mode (Tailwind CSS variables)  
+  - Client-brandable color schemes (dynamic CSS variables via Next.js Theme Provider)  
+
+---  
+
+## 9. Technical Implementation  
+
+**Frontend (Next.js):**  
+- `/app/(auth)/login`: Supabase Auth UI wrapper  
+- `/app/forecasts/[id]`: Dynamic route with:  
+  - Server Component fetches forecast data (Supabase `select()` with RLS)  
+  - Client Component for interactive charts (TanStack Table + D3.js)  
+- API Routes (`/api/export-pdf`): Vercel Serverless + Puppeteer  
+
+**Backend (Supabase):**  
+- Tables:  
+  - `forecasts` (JSONB column for input assumptions)  
+  - `scenarios` (references `forecasts`, stores variant differences)  
+- Realtime: Enable for `comments` table (Postgres triggers notify frontend)  
+- Row Level Security: Policies like `user_id = auth.uid()` for private forecasts  
+
+---  
+
+## 10. Development Setup  
+
+**Tools Required:**  
+- Node.js v18+, PostgreSQL (local or Supabase), Vercel CLI  
+
+**Steps:**  
+1. Clone repo:  
+   ```bash  
+   git clone [repo] && cd forecastiq  

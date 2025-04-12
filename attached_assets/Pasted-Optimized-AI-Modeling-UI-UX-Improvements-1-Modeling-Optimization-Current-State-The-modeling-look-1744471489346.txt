@@ -1,0 +1,65 @@
+Optimized AI Modeling & UI/UX Improvements
+1. Modeling Optimization
+Current State: The modeling looks great but has room for improvement.
+
+Request: Optimize the design and functionality of the model as much as possible. Consider:
+
+Performance improvements (e.g., faster calculations, reduced redundancy).
+
+Enhanced visual clarity (e.g., better labeling, intuitive data representation).
+
+Logical flow adjustments to improve usability.
+
+2. UI/UX Adjustments for the AI Modeling Page
+Issue: The page incorrectly shows the Dashboard view header and top bars, which should not be present.
+
+Request:
+
+Remove all Dashboard-related UI elements (header, top bars, etc.) from the AI Modeling page.
+
+Ensure the page only displays relevant modeling controls and outputs.
+
+3. Input Persistence & Layout Restructuring
+Current Problem:
+
+When a user inputs a value (e.g., Price of Offer: 14000 in Product Parameters) and switches to another section (e.g., Sales & Marketing), the previously entered value is lost/reset.
+
+Requested Fix:
+
+Implement state persistence so that input values are retained when switching between sections.
+
+Store inputs in a temporary model or cache until final submission.
+
+Layout Improvement:
+
+Current: Inputs are split into separate sections (e.g., Product, Sales, Marketing) with a card-based navigation system.
+
+Problem: This requires extra clicks and disrupts workflow.
+
+Request:
+
+Remove the multi-section card layout.
+
+Display all input fields on a single page (with logical grouping if needed).
+
+Use a scrollable or condensed form layout to avoid clutter.
+
+Ensure all inputs are visible/modifiable without switching tabs.
+
+4. Additional Suggestions (Optional Enhancements)
+If possible:
+
+Add input validation (e.g., numeric checks for price fields).
+
+Include auto-save functionality to prevent accidental data loss.
+
+Improve real-time feedback (e.g., live preview of model changes).
+
+Why This Improves the Original Prompt:
+Clearer Structure – Separates concerns (modeling, UI, inputs) for easier implementation.
+
+More Detailed – Explains why changes are needed (e.g., input persistence improves UX).
+
+Removes Ambiguity – Specifies exact UI elements to remove (Dashboard headers).
+
+Future-Proofing – Optional enhancements give flexibility for further improvements.
